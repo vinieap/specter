@@ -8,13 +8,13 @@ from spectral_clustering import (
     BatchBayesianSpectralOptimizer,
     BayesianSpectralOptimizer,
     VerbosityLevel,
-    optimize_spectral_clustering,
     generate_optimization_visualizations,
+    optimize_spectral_clustering,
 )
 
 # Generate simple test data
 print("Generating test data...")
-X, y = make_blobs(n_samples=100, n_features=4, centers=3, random_state=42)
+X, y = make_blobs(n_samples=1000, n_features=10, centers=3, random_state=42)
 print(f"Dataset shape: {X.shape}")
 
 # Test 1: Basic optimization with batch optimizer
@@ -77,5 +77,5 @@ print("\n✅ All tests completed successfully!")
 generate_optimization_visualizations(
     batch_results=batch_results,
     sequential_results=seq_results,
-    verbosity=VerbosityLevel.MEDIUM
+    verbosity=VerbosityLevel.MEDIUM,
 )

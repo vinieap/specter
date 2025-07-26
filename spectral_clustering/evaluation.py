@@ -50,9 +50,9 @@ def parallel_objective_function(
         futures = [executor.submit(evaluate_params_worker, item) for item in work_items]
         results = []
 
-        for future in as_completed(futures, timeout=30):
+        for future in as_completed(futures, timeout=300):
             try:
-                score, success, message = future.result(timeout=10)
+                score, success, message = future.result(timeout=100)
                 results.append((score, success, message))
                 if verbosity >= VerbosityLevel.DETAILED:
                     if success:
