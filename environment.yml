@@ -1,0 +1,12 @@
+name: specter
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - numpy
+  - scikit-learn
+  - matplotlib
+  - psutil
+  - pip
+  - pip:
+    - optuna
