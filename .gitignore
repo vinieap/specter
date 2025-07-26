@@ -1,0 +1,11 @@
+/.pytest_cache
+/.vscode
+/__pycache__
+/batch_optimization_history.png
+/batch_parallel_coordinate.png
+/batch_param_importance.png
+/convergence_comparison.png
+/optuna_spectral_studies.db
+/sequential_optimization_history.png
+/sequential_parallel_coordinate.png
+/sequential_param_importance.png
