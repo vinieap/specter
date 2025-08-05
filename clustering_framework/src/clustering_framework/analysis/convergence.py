@@ -4,7 +4,7 @@ This module provides tools for analyzing the convergence behavior of clustering 
 including stability metrics and convergence detection.
 """
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 from sklearn.base import BaseEstimator
@@ -163,3 +163,47 @@ class ConvergenceAnalyzer:
                 ])
                 
         return recommendations
+
+
+def analyze_convergence(model: BaseEstimator, X: Optional[np.ndarray] = None) -> Dict[str, Any]:
+    """Analyze convergence behavior of a clustering model.
+
+    This function analyzes the convergence behavior of a fitted clustering model,
+    including stability metrics and convergence detection.
+
+    Parameters
+    ----------
+    model : BaseEstimator
+        The fitted clustering model to analyze
+    X : array-like, optional
+        Input data used for clustering. Required for stability analysis.
+
+    Returns
+    -------
+    Dict[str, Any]
+        Dictionary containing convergence analysis results:
+        - converged: bool, whether the algorithm converged
+        - n_iterations: int, number of iterations until convergence
+        - stability_score: float, measure of clustering stability
+        - recommendations: List[str], suggestions for improvement
+
+    Raises
+    ------
+    ValueError
+        If X is not provided but required for analysis
+    """
+    if X is None:
+        raise ValueError("Input data X is required for convergence analysis")
+
+    analyzer = ConvergenceAnalyzer()
+    results = analyzer.analyze(model, X)
+    
+    return {
+        "converged": results.converged,
+        "n_iterations": results.n_iterations,
+        "stability_score": results.stability_score,
+        "convergence_curve": {
+            k: v.tolist() for k, v in results.convergence_curve.items()
+        },
+        "recommendations": results.recommendations,
+    }

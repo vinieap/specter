@@ -1,122 +1,79 @@
-"""Sequential optimization strategy for clustering algorithms."""
+"""Sequential optimization strategy for clustering algorithms using Optuna."""
 
-from typing import Any, Dict, List, Optional
-import numpy as np
+from typing import Any, Dict, Optional
+import optuna
 from sklearn.base import BaseEstimator
 
 from .base import BaseOptimizer
 
+
 class SequentialOptimizer(BaseOptimizer):
-    """Optimizer that evaluates parameter sets sequentially with adaptive sampling."""
-    
+    """Optimizer that evaluates parameter sets sequentially using Optuna's TPE sampler."""
+
     def __init__(
         self,
         algorithm: Any,  # ClusteringAlgorithm
-        exploration_ratio: float = 0.2,
         max_trials: Optional[int] = None,
+        n_startup_trials: Optional[int] = None,
         patience: int = 10,
         min_delta: float = 1e-4,
-        min_trials: int = 20
+        min_trials: int = 20,
+        use_dashboard: bool = False,
+        dashboard_port: int = 8080,
+        random_state: int = 42,
     ):
         """Initialize sequential optimizer.
-        
+
         Args:
             algorithm: Clustering algorithm to optimize
-            exploration_ratio: Ratio of trials that should explore new parameter spaces
             max_trials: Maximum number of optimization trials
+            n_startup_trials: Number of random trials before optimization
             patience: Number of trials without improvement before convergence
             min_delta: Minimum change in score to be considered an improvement
             min_trials: Minimum number of trials before allowing convergence
+            use_dashboard: Whether to start Optuna dashboard
+            dashboard_port: Port for Optuna dashboard
+            random_state: Random seed for reproducibility
         """
         super().__init__(
             max_trials=max_trials,
+            n_startup_trials=n_startup_trials,
             patience=patience,
             min_delta=min_delta,
-            min_trials=min_trials
+            min_trials=min_trials,
+            use_dashboard=use_dashboard,
+            dashboard_port=dashboard_port,
+            random_state=random_state,
         )
         self.algorithm = algorithm
-        self.exploration_ratio = exploration_ratio
-        self.parameter_history: List[Dict[str, Any]] = []
-        self.score_history: List[float] = []
-        
-    def _create_trial(self) -> Dict[str, Any]:
-        """Create a new trial with adaptively sampled parameters.
-        
-        Returns:
-            Dictionary containing trial parameters
-        """
-        if (len(self.parameter_history) == 0 or 
-            np.random.random() < self.exploration_ratio):
-            # Explore new parameter space
-            return self.algorithm.sample_parameters()
-        else:
-            # Exploit successful parameter regions
-            return self._sample_from_history()
-        
-    def _evaluate_trial(self, params: Dict[str, Any], X: np.ndarray) -> float:
-        """Evaluate a trial with given parameters.
-        
-        Args:
-            params: Parameters to evaluate
-            X: Input data
-            
-        Returns:
-            Score for the trial
-        """
-        # Create and fit model
-        model = self.algorithm.create_estimator(params)
-        model.fit(X)
-        
-        # Compute and store score
-        score = self._compute_score(model, X)
-        self.parameter_history.append(params)
-        self.score_history.append(score)
-        
-        return score
-        
+
     def _create_model(self, params: Dict[str, Any]) -> BaseEstimator:
         """Create a model with the given parameters.
-        
+
         Args:
             params: Parameters to create model with
-            
+
         Returns:
             Created model instance
         """
-        return self.algorithm.create_estimator(params)
-        
-    def _compute_score(self, model: BaseEstimator, X: np.ndarray) -> float:
-        """Compute clustering quality score.
-        
+        estimator_params = params.copy()
+        if self.algorithm.supports_random_state:
+            estimator_params["random_state"] = self.random_state
+        return self.algorithm.estimator_class(**estimator_params)
+
+    def _sample_parameters(self, trial: optuna.Trial) -> Dict[str, Any]:
+        """Sample parameters using Optuna's trial object.
+
+        This method adapts the algorithm's parameter space to Optuna's parameter
+        suggestion interface. It handles different parameter types appropriately:
+        - Categorical parameters use suggest_categorical
+        - Integer parameters use suggest_int
+        - Float parameters use suggest_float
+
         Args:
-            model: Fitted clustering model
-            X: Input data
-            
+            trial: Optuna trial object for parameter suggestion
+
         Returns:
-            Clustering quality score
+            Dictionary of sampled parameters
         """
-        from sklearn.metrics import silhouette_score
-        labels = model.predict(X)
-        return silhouette_score(X, labels)
-        
-    def _sample_from_history(self) -> Dict[str, Any]:
-        """Sample parameters from historical successful trials.
-        
-        Returns:
-            Dictionary containing sampled parameters
-        """
-        # Weight trials by their scores
-        scores = np.array(self.score_history)
-        weights = np.exp(scores - np.max(scores))  # Softmax-like weighting
-        weights /= np.sum(weights)
-        
-        # Sample a historical trial
-        selected_idx = np.random.choice(len(self.parameter_history), p=weights)
-        base_params = self.parameter_history[selected_idx].copy()
-        
-        # Add small random perturbations
-        for key, value in base_params.items():
-            if isinstance(value, (int, float)):
-                base_params[key] = value * (1 + np.random.normal(0, 0.1))
-                
-        return base_params
+        return self.algorithm.sample_parameters(trial)

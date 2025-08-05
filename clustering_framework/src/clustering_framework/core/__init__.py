@@ -1,6 +1,6 @@
 """Core components of the clustering library."""
 
-from .algorithm import ClusteringAlgorithm
+from ..algorithms import ClusteringAlgorithm, ParamDict
 from .optimizer import ClusteringOptimizer
 from .registry import algorithm_registry
 from .types import (
@@ -8,7 +8,6 @@ from .types import (
     NoiseAnalysis,
     ConvergenceStatus,
     AlgorithmPerformance,
-    ParamDict,
     OptionalParamDict,
     ArrayLike,
 )
@@ -17,10 +16,8 @@ __all__ = [
     # Base classes
     "ClusteringAlgorithm",
     "ClusteringOptimizer",
-    
     # Registry
     "algorithm_registry",
-    
     # Types
     "OptimizationResult",
     "NoiseAnalysis",

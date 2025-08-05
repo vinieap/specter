@@ -1,54 +1,146 @@
 """HDBSCAN clustering algorithm implementation."""
-from typing import Dict, Any
+
+from typing import Type
 
 import hdbscan
+from sklearn.base import BaseEstimator
 
-from .base import BaseClusteringAlgorithm
+from .base import ClusteringAlgorithm, ParamDict
 
 
-class HDBSCANClusteringAlgorithm(BaseClusteringAlgorithm):
-    """HDBSCAN clustering algorithm with Optuna optimization support."""
+class HDBSCANAlgorithm(ClusteringAlgorithm):
+    """HDBSCAN (Hierarchical Density-Based Spatial Clustering of Applications with Noise).
+
+    HDBSCAN extends DBSCAN by converting it into a hierarchical clustering algorithm,
+    and then using a technique to extract a flat clustering based on the stability of clusters.
+    """
 
     @property
     def name(self) -> str:
         return "hdbscan"
 
     @property
-    def estimator_class(self) -> type:
+    def category(self) -> str:
+        return "density"
+
+    @property
+    def estimator_class(self) -> Type[BaseEstimator]:
         return hdbscan.HDBSCAN
 
-    def sample_parameters(self, trial) -> Dict[str, Any]:
-        """Sample parameters for HDBSCAN clustering."""
-        return {
-            "min_cluster_size": trial.suggest_int("min_cluster_size", 2, 20),
-            "min_samples": trial.suggest_int("min_samples", 1, 10),
-            "cluster_selection_epsilon": trial.suggest_float(
-                "cluster_selection_epsilon", 0.0, 1.0
-            ),
-            "alpha": trial.suggest_float("alpha", 0.5, 1.5),
-            "cluster_selection_method": trial.suggest_categorical(
-                "cluster_selection_method", ["eom", "leaf"]
-            ),
-            "metric": trial.suggest_categorical(
-                "metric", ["euclidean", "manhattan", "cosine"]
-            ),
-            "algorithm": trial.suggest_categorical(
-                "algorithm", ["best", "generic", "prims_kdtree", "prims_balltree", "boruvka_kdtree", "boruvka_balltree"]
-            ),
-        }
+    def get_default_parameters(self) -> ParamDict:
+        """Get default parameters for HDBSCAN.
 
-    def supports_predict(self) -> bool:
-        """HDBSCAN has a different prediction mechanism."""
-        return False
-
-    def get_default_parameters(self) -> Dict[str, Any]:
-        """Get default parameters for HDBSCAN clustering."""
+        Returns
+        -------
+        Dict[str, Any]
+            Default parameters:
+            - min_cluster_size: 5
+            - min_samples: 5
+            - cluster_selection_epsilon: 0.0
+            - metric: 'euclidean'
+            - cluster_selection_method: 'eom'
+            - leaf_size: 40
+        """
         return {
             "min_cluster_size": 5,
             "min_samples": 5,
             "cluster_selection_epsilon": 0.0,
-            "alpha": 1.0,
-            "cluster_selection_method": "eom",
             "metric": "euclidean",
-            "algorithm": "best",
+            "cluster_selection_method": "eom",
+            "leaf_size": 40,
         }
+
+    def sample_parameters(self, trial) -> ParamDict:
+        """Sample parameters for HDBSCAN.
+
+        Parameters
+        ----------
+        trial : optuna.Trial
+            Trial object for parameter sampling
+
+        Returns
+        -------
+        Dict[str, Any]
+            Sampled parameters:
+            - min_cluster_size: int in [2, 15]
+            - min_samples: int in [2, 10]
+            - cluster_selection_epsilon: float in [0.0, 0.5]
+            - metric: one of ['euclidean', 'manhattan', 'cosine']
+            - cluster_selection_method: one of ['eom', 'leaf']
+            - leaf_size: int in [20, 60]
+        """
+        return {
+            "min_cluster_size": trial.suggest_int("min_cluster_size", 2, 15),
+            "min_samples": trial.suggest_int("min_samples", 2, 10),
+            "cluster_selection_epsilon": trial.suggest_float(
+                "cluster_selection_epsilon", 0.0, 0.5
+            ),
+            "metric": trial.suggest_categorical(
+                "metric", ["euclidean", "manhattan", "cosine"]
+            ),
+            "cluster_selection_method": trial.suggest_categorical(
+                "cluster_selection_method", ["eom", "leaf"]
+            ),
+            "leaf_size": trial.suggest_int("leaf_size", 20, 60),
+        }
+
+    def validate_parameters(self, params: ParamDict) -> None:
+        """Validate parameters for HDBSCAN.
+
+        Parameters
+        ----------
+        params : Dict[str, Any]
+            Parameters to validate
+
+        Raises
+        ------
+        ValueError
+            If parameters are invalid
+        """
+        required = {
+            "min_cluster_size",
+            "min_samples",
+            "cluster_selection_epsilon",
+            "metric",
+            "cluster_selection_method",
+            "leaf_size",
+        }
+        missing = required - set(params.keys())
+        if missing:
+            raise ValueError(f"Missing required parameters: {missing}")
+
+        if (
+            not isinstance(params["min_cluster_size"], int)
+            or params["min_cluster_size"] < 2
+        ):
+            raise ValueError("min_cluster_size must be an integer >= 2")
+
+        if not isinstance(params["min_samples"], int) or params["min_samples"] < 1:
+            raise ValueError("min_samples must be an integer >= 1")
+
+        if (
+            not isinstance(params["cluster_selection_epsilon"], (int, float))
+            or params["cluster_selection_epsilon"] < 0
+        ):
+            raise ValueError("cluster_selection_epsilon must be a non-negative number")
+
+        if params["metric"] not in ["euclidean", "manhattan", "cosine"]:
+            raise ValueError(
+                "metric must be one of: 'euclidean', 'manhattan', 'cosine'"
+            )
+
+        if params["cluster_selection_method"] not in ["eom", "leaf"]:
+            raise ValueError("cluster_selection_method must be one of: 'eom', 'leaf'")
+
+        if not isinstance(params["leaf_size"], int) or params["leaf_size"] < 1:
+            raise ValueError("leaf_size must be an integer >= 1")
+
+    def supports_predict(self) -> bool:
+        """HDBSCAN does not support predicting on new data.
+
+        Returns
+        -------
+        bool
+            Always False for HDBSCAN
+        """
+        return False
