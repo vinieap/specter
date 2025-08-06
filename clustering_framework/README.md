@@ -1,135 +1,128 @@
 # Clustering Framework
 
-A comprehensive and robust Python framework for data clustering, optimization, and analysis. This framework provides a unified interface to multiple clustering algorithms, automated parameter optimization, and extensive evaluation tools. It is designed for both researchers and practitioners working with various types of datasets, from simple numerical data to complex high-dimensional structures.
+A Python framework focused on noise detection and analysis in clustering tasks. The framework provides advanced tools for identifying and characterizing different types of noise in your data, helping you make informed decisions about data preprocessing and algorithm selection.
 
 ## Overview
 
-The Clustering Framework is built to address common challenges in data clustering:
-- Finding optimal clustering parameters for your specific dataset
-- Evaluating cluster quality and stability
-- Handling different types of data structures and distributions
-- Scaling to large datasets efficiently
-- Providing reproducible and interpretable results
+The framework is built to address key challenges in handling noisy data for clustering:
+- Detecting and characterizing different types of noise points
+- Identifying outliers using multiple statistical methods
+- Analyzing local and global noise patterns
+- Providing actionable recommendations for noise handling
 
-### Key Benefits
-- **Unified Interface**: Consistent API across different clustering algorithms
-- **Automated Optimization**: Smart parameter tuning for optimal results
-- **Robust Evaluation**: Comprehensive metrics and analysis tools
-- **Flexibility**: Support for various data types and clustering approaches
-- **Scalability**: Efficient implementation for large datasets
-- **Reproducibility**: Deterministic results with seed control
+### Key Features
+- **Advanced Noise Detection**: Multiple methods including statistical, density-based, and isolation-based approaches
+- **Noise Classification**: Identification of different noise types (global outliers, local outliers, density-based noise)
+- **Ensemble Approach**: Combines multiple detection methods for robust noise identification
+- **Actionable Insights**: Provides specific recommendations for algorithm selection and parameter tuning
+- **Comprehensive Analysis**: Detailed noise profiles with multiple metrics and scores
 
 ### When to Use This Framework
-- **Data Exploration**: Quickly understand natural groupings in your data
-- **Pattern Discovery**: Identify hidden structures and relationships
-- **Customer Segmentation**: Group similar customers for targeted marketing
-- **Image Segmentation**: Cluster pixels or features for image analysis
-- **Anomaly Detection**: Identify outliers and unusual patterns
-- **Document Clustering**: Group similar documents or text data
+- **Data Preprocessing**: Identify and handle noise before clustering
+- **Algorithm Selection**: Get recommendations for noise-robust clustering methods
+- **Parameter Tuning**: Receive data-driven suggestions for clustering parameters
+- **Quality Assessment**: Understand the noise characteristics of your dataset
 
 ## Features
 
-### Clustering Algorithms
+### Noise Detection Methods
 
-#### K-means Clustering
-- **Best for**: Well-separated, spherical clusters
+#### Statistical Outlier Detection
+- **Approach**: Uses statistical methods to identify outliers
 - **Key Features**:
-  - Fast and memory-efficient
-  - Scalable to large datasets
-  - Customizable initialization methods (k-means++, random)
+  - Z-score analysis for each feature
+  - Mahalanobis distance calculation
+  - Combined statistical evidence
 - **Parameters**:
-  - `n_clusters`: Number of clusters (required)
-  - `init`: Initialization method ('k-means++', 'random')
-  - `max_iter`: Maximum iterations for convergence
-  - `n_init`: Number of times to run with different seeds
-- **Use Cases**:
-  - Customer segmentation
-  - Image color quantization
-  - Feature learning
+  - Contamination level
+  - Statistical thresholds
+- **Output**:
+  - Noise scores
+  - Statistical metrics
+  - Outlier indices
 
-#### DBSCAN (Density-Based Spatial Clustering)
-- **Best for**: Clusters of varying shapes and densities
+#### Density-Based Detection
+- **Approach**: Identifies noise based on local density patterns
 - **Key Features**:
-  - No pre-defined number of clusters needed
-  - Handles noise points automatically
-  - Can find non-spherical clusters
+  - K-nearest neighbors density estimation
+  - Reachability analysis
+  - Local density ratio calculation
 - **Parameters**:
-  - `eps`: Maximum distance between points in a cluster
-  - `min_samples`: Minimum points to form a dense region
-- **Use Cases**:
-  - Spatial data analysis
-  - Noise detection
-  - Network clustering
+  - Number of neighbors
+  - Density thresholds
+- **Output**:
+  - Density scores
+  - Reachability metrics
+  - Density-based noise indices
 
-#### Spectral Clustering
-- **Best for**: Complex, non-spherical shapes
+#### Isolation Forest Detection
+- **Approach**: Uses isolation trees to find anomalies
 - **Key Features**:
-  - Handles complex cluster shapes
-  - Based on graph theory principles
-  - Multiple affinity methods available
+  - Random forest-based isolation
+  - Path length analysis
+  - Anomaly scoring
 - **Parameters**:
-  - `n_clusters`: Number of clusters
-  - `affinity`: Similarity metric ('rbf', 'nearest_neighbors', etc.)
-  - `n_neighbors`: Number of neighbors (for 'nearest_neighbors')
-- **Use Cases**:
-  - Image segmentation
-  - Social network analysis
-  - Manifold learning
+  - Contamination level
+  - Random state
+- **Output**:
+  - Isolation scores
+  - Anomaly predictions
+  - Forest statistics
 
-### Automated Parameter Optimization
-
-#### Bayesian Optimization
-- **Features**:
-  - Smart parameter space exploration
-  - Efficient optimization strategy
-  - Parallel optimization support
-- **Customization Options**:
-  - Number of optimization calls
-  - Objective function selection
-  - Parameter search spaces
-  - Cross-validation strategy
-
-#### Grid and Random Search
-- **Features**:
-  - Exhaustive parameter exploration
-  - Random sampling for large spaces
-  - Parallel execution support
+#### Local Outlier Detection
+- **Approach**: Identifies local outliers using LOF
+- **Key Features**:
+  - Local Outlier Factor calculation
+  - Neighborhood analysis
+  - Local density comparison
 - **Parameters**:
-  - Search space definition
-  - Number of iterations
-  - Cross-validation folds
+  - Number of neighbors
+  - Contamination level
+- **Output**:
+  - LOF scores
+  - Outlier factors
+  - Local outlier indices
 
-### Cluster Analysis Tools
-
-#### Stability Analysis
-- **Methods**:
-  - Bootstrap resampling
-  - Cross-validation
-  - Noise injection
-- **Metrics**:
-  - Cluster consistency score
-  - Label stability index
-  - Membership probability
-
-#### Quality Evaluation
-- **Internal Metrics**:
-  - Silhouette score (cluster separation)
-  - Calinski-Harabasz index (density)
-  - Davies-Bouldin index (cluster similarity)
-- **External Metrics** (when ground truth available):
-  - Adjusted Rand index
-  - Normalized mutual information
-  - V-measure
-
-#### Noise Sensitivity Analysis
-- **Features**:
-  - Gaussian noise injection
-  - Outlier impact analysis
-  - Boundary stability assessment
+#### Covariance-Based Detection
+- **Approach**: Uses robust covariance estimation
+- **Key Features**:
+  - Elliptic envelope fitting
+  - Robust covariance estimation
+  - Mahalanobis scoring
 - **Parameters**:
-  - Noise levels
-  - Number of iterations
-  - Analysis metrics
+  - Contamination level
+  - Random state
+- **Output**:
+  - Covariance scores
+  - Location estimates
+  - Precision matrix
+
+### Noise Analysis Tools
+
+#### Noise Classification
+- **Types Detected**:
+  - Global outliers
+  - Local outliers
+  - Density-based noise
+  - Bridge points
+- **Features**:
+  - Multi-criteria classification
+  - Hierarchical noise typing
+  - Confidence scoring
+
+#### Recommendations Engine
+- **Algorithm Suggestions**:
+  - Based on noise ratio
+  - Considers noise types
+  - Specific to data characteristics
+- **Parameter Recommendations**:
+  - DBSCAN parameters
+  - Spectral clustering parameters
+  - Preprocessing suggestions
+- **Preprocessing Advice**:
+  - Based on noise patterns
+  - Data-specific guidance
+  - Handling strategies
 
 ### Flexible API
 
@@ -181,543 +174,284 @@ analysis = analyze_clusters(
 
 - Python 3.8 or higher
 - pip package manager
-- conda (recommended for environment management)
-- BLAS/LAPACK libraries for linear algebra operations
-- C++ compiler for building extensions (optional, for performance optimization)
 
 ### Dependencies
 
-The framework requires the following main packages:
+The framework requires the following packages:
 - numpy>=1.20.0
-- scipy>=1.7.0
 - scikit-learn>=1.0.0
+- scipy>=1.7.0
 - pandas>=1.3.0
 - matplotlib>=3.4.0
-- seaborn>=0.11.0
-- joblib>=1.0.0
+- optuna>=3.0.0
+- optuna-dashboard>=0.12.0 (optional: for visualization)
 
-### Installation Methods
-
-#### 1. Using pip (Recommended for Users)
+### Installation
 
 ```bash
 # Create and activate virtual environment
 python -m venv clustering_env
 source clustering_env/bin/activate  # On Windows: clustering_env\Scripts\activate
 
-# Install from PyPI
-pip install clustering-framework
-
-# Install with optional dependencies for all features
-pip install clustering-framework[all]
-```
-
-#### 2. Using conda (Recommended for Scientific Computing)
-
-```bash
-# Create new environment with required packages
-conda create -n clustering_env python=3.12
-conda activate clustering_env
-
-# Install main package and dependencies
-conda install -c conda-forge clustering-framework
-```
-
-#### 3. Development Installation (For Contributors)
-
-```bash
 # Clone the repository
 git clone https://github.com/username/clustering_framework.git
 cd clustering_framework
 
-# Create and activate conda environment
-conda create -n clustering_dev python=3.12
-conda activate clustering_dev
+# Install in development mode
+pip install -e .
 
-# Install in development mode with all dependencies
-pip install -e ".[dev,test,docs]"
-```
+## Usage Examples
 
-### Verifying Installation
+Here are examples demonstrating the framework's noise detection and analysis capabilities:
 
-```python
-# Run this in Python to verify installation
-import clustering_framework as cf
-print(cf.__version__)
-
-# Should print the version number without errors
-```
-
-### Platform-Specific Notes
-
-#### Windows
-- Ensure Microsoft Visual C++ Build Tools are installed
-- Use Anaconda distribution for easier dependency management
-
-#### Linux
-- Install BLAS/LAPACK development libraries:
-  ```bash
-  # Ubuntu/Debian
-  sudo apt-get install libblas-dev liblapack-dev
-
-  # CentOS/RHEL
-  sudo yum install blas-devel lapack-devel
-  ```
-
-#### macOS
-- Install Command Line Tools:
-  ```bash
-  xcode-select --install
-  ```
-- Use Homebrew for BLAS/LAPACK:
-  ```bash
-  brew install openblas lapack
-  ```
-
-## Working with Real Datasets
-
-This section provides practical examples using real-world datasets to demonstrate the framework's capabilities in different scenarios.
-
-### 1. Customer Segmentation (E-commerce Dataset)
-
-```python
-import pandas as pd
-from clustering_framework import quick_cluster, preprocess_data
-from clustering_framework.visualization import plot_clusters
-
-# Load and preprocess e-commerce data
-data = pd.read_csv('customer_data.csv')
-features = ['recency', 'frequency', 'monetary_value', 'avg_basket_size']
-
-# Preprocess the data (scaling, handling missing values)
-X = preprocess_data(
-    data[features],
-    scale=True,
-    handle_missing='mean'
-)
-
-# Perform clustering with automatic parameter selection
-model, metrics = quick_cluster(
-    X,
-    algorithm='kmeans',
-    n_clusters_range=(3, 8),  # Try 3-8 clusters
-    optimization_metric='silhouette'
-)
-
-# Analyze and visualize results
-plot_clusters(X, model.labels_, features=features)
-print(f"Number of clusters: {len(set(model.labels_))}")
-print(f"Silhouette score: {metrics['silhouette']:.3f}")
-
-# Get cluster profiles
-cluster_profiles = pd.DataFrame({
-    'Cluster': range(len(set(model.labels_))),
-    'Size': pd.Series(model.labels_).value_counts().sort_index(),
-    'Avg_Recency': data.groupby(model.labels_)['recency'].mean(),
-    'Avg_Frequency': data.groupby(model.labels_)['frequency'].mean(),
-    'Avg_Monetary': data.groupby(model.labels_)['monetary_value'].mean()
-})
-print("\nCluster Profiles:")
-print(cluster_profiles)
-```
-
-### 2. Image Segmentation (Medical Imaging)
+### Basic Noise Detection
 
 ```python
 import numpy as np
-from skimage import io
-from clustering_framework import optimize_clustering
-from clustering_framework.preprocessing import extract_image_features
-from clustering_framework.visualization import plot_segmentation
+from clustering_framework import NoiseDetector
 
-# Load and preprocess medical image
-image = io.imread('brain_scan.png')
-features = extract_image_features(
-    image,
-    feature_type=['intensity', 'texture', 'position']
+# Create sample data
+X = np.random.randn(1000, 5)  # 1000 samples, 5 features
+X[0:50] += 10  # Add some obvious outliers
+
+# Initialize noise detector
+detector = NoiseDetector(
+    contamination=0.1,  # Expected proportion of noise
+    n_neighbors=20,     # For local noise detection
+    random_state=42     # For reproducibility
 )
 
-# Optimize spectral clustering parameters
-results = optimize_clustering(
-    features,
-    algorithm='spectral',
-    parameter_space={
-        'n_clusters': [3, 4, 5],
-        'affinity': ['rbf', 'nearest_neighbors'],
-        'n_neighbors': [10, 20, 30]
-    },
-    n_calls=30
-)
+# Detect and analyze noise
+noise_profile = detector.detect_noise(X)
 
-# Apply best model and visualize
-segmented_image = plot_segmentation(
-    image,
-    results.best_model.labels_,
-    overlay=True
-)
+# Print basic statistics
+print(f"Noise ratio: {noise_profile.noise_ratio:.3f}")
+print(f"Number of noise points: {len(noise_profile.noise_indices)}")
 
-print("Best parameters:", results.best_params)
-print("Clustering metrics:", results.best_metrics)
+# Examine different types of noise
+for noise_type, indices in noise_profile.noise_types.items():
+    print(f"\n{noise_type}: {sum(indices)} points")
+
+# Get recommendations
+print("\nRecommended algorithms:", noise_profile.recommendations["algorithm"])
+print("\nPreprocessing suggestions:", noise_profile.recommendations["preprocessing"])
 ```
 
-### 3. Text Document Clustering (News Articles)
-
-```python
-from clustering_framework import quick_cluster
-from clustering_framework.preprocessing import text_to_features
-from clustering_framework.visualization import plot_cluster_wordclouds
-
-# Load and preprocess text data
-docs = pd.read_csv('news_articles.csv')
-X = text_to_features(
-    docs['text'],
-    method='tfidf',
-    max_features=1000,
-    stop_words='english'
-)
-
-# Perform clustering
-model, metrics = quick_cluster(
-    X,
-    algorithm='kmeans',
-    n_clusters=5,
-    preprocessing='normalize'
-)
-
-# Analyze clusters
-plot_cluster_wordclouds(
-    docs['text'],
-    model.labels_,
-    top_n_words=20
-)
-
-# Print top terms per cluster
-print("\nTop terms per cluster:")
-for i, terms in enumerate(get_cluster_terms(model, feature_names)):
-    print(f"\nCluster {i}: {', '.join(terms[:10])}")
-```
-
-### 4. Anomaly Detection (Network Traffic)
+### Detailed Noise Analysis
 
 ```python
 import pandas as pd
-from clustering_framework import analyze_clusters
-from clustering_framework.algorithms import DBSCAN
+from clustering_framework import NoiseDetector
 
-# Load network traffic data
-data = pd.read_csv('network_traffic.csv')
-features = ['bytes_sent', 'bytes_received', 'duration', 'port']
+# Load your dataset
+data = pd.read_csv('your_dataset.csv')
+X = data.values
 
-# Preprocess and normalize features
-X = preprocess_data(
-    data[features],
-    scale=True,
-    handle_missing='drop'
+# Initialize detector with custom settings
+detector = NoiseDetector(
+    contamination=0.15,  # Higher contamination expectation
+    n_neighbors=30       # More neighbors for stable density estimation
 )
 
-# Apply DBSCAN for anomaly detection
-model = DBSCAN(
-    eps=0.3,
-    min_samples=5,
-    metric='euclidean'
-)
-model.fit(X)
+# Get noise profile
+profile = detector.detect_noise(X)
 
-# Analyze results
-analysis = analyze_clusters(
-    X,
-    model,
-    noise_analysis=True
-)
+# Examine noise scores
+print("\nNoise Score Statistics:")
+print(f"Mean score: {np.mean(profile.noise_scores):.3f}")
+print(f"Score threshold: {np.percentile(profile.noise_scores, 85):.3f}")
 
-# Print anomaly statistics
-n_anomalies = sum(model.labels_ == -1)
-print(f"\nDetected anomalies: {n_anomalies}")
-print(f"Anomaly percentage: {n_anomalies/len(X)*100:.2f}%")
+# Look at different noise types
+print("\nNoise Type Breakdown:")
+for noise_type, indices in profile.noise_types.items():
+    print(f"{noise_type}: {sum(indices)} points ({sum(indices)/len(X)*100:.1f}%)")
 
-# Visualize anomalies
-plot_anomalies(
-    X,
-    model.labels_,
-    features=features[:2]  # Plot first two features
-)
+# Get algorithm-specific recommendations
+if "DBSCAN" in profile.recommendations["algorithm"]:
+    eps = profile.recommendations["parameters"]["eps"]
+    min_samples = profile.recommendations["parameters"]["min_samples"]
+    print(f"\nRecommended DBSCAN parameters:")
+    print(f"eps: {eps:.3f}")
+    print(f"min_samples: {min_samples}")
+
+# Check preprocessing recommendations
+print("\nPreprocessing Recommendations:")
+for rec in profile.recommendations["preprocessing"]:
+    print(f"- {rec}")
 ```
 
-### 5. Time Series Clustering (Stock Market Data)
+### Accessing Detailed Analysis Results
 
 ```python
-from clustering_framework import optimize_clustering
-from clustering_framework.preprocessing import extract_timeseries_features
-from clustering_framework.visualization import plot_cluster_trends
+# Get detailed results from each detection method
+statistical_results = profile.details["_detect_statistical_outliers"]
+density_results = profile.details["_detect_density_based_noise"]
+isolation_results = profile.details["_detect_isolation_forest_noise"]
 
-# Load stock market data
-data = pd.read_csv('stock_prices.csv')
-stocks = data.pivot(
-    index='date',
-    columns='symbol',
-    values='close'
-)
+# Examine statistical outliers
+print("\nStatistical Analysis:")
+print(f"Z-score range: {np.min(statistical_results['z_scores'])} to {np.max(statistical_results['z_scores'])}")
+print(f"Mahalanobis distance threshold: {statistical_results['threshold']:.3f}")
 
-# Extract time series features
-features = extract_timeseries_features(
-    stocks,
-    features=['trend', 'seasonality', 'volatility']
-)
+# Look at density-based results
+print("\nDensity Analysis:")
+print(f"Average density score: {np.mean(density_results['density_scores']):.3f}")
+print(f"Reachability range: {np.min(density_results['reachability'])} to {np.max(density_results['reachability'])}")
 
-# Optimize clustering
-results = optimize_clustering(
-    features,
-    algorithm='kmeans',
-    n_clusters_range=(3, 8),
-    n_calls=30
-)
-
-# Visualize cluster trends
-plot_cluster_trends(
-    stocks,
-    results.best_model.labels_,
-    n_periods=30  # Show last 30 days
-)
-
-# Print cluster characteristics
-print("\nCluster Characteristics:")
-for i in range(len(set(results.best_model.labels_))):
-    stocks_in_cluster = stocks.columns[results.best_model.labels_ == i]
-    print(f"\nCluster {i} stocks: {', '.join(stocks_in_cluster)}")
+# Check isolation forest insights
+print("\nIsolation Forest Results:")
+print(f"Number of estimators used: {isolation_results['n_estimators']}")
 ```
 
-Each example includes:
-- Data loading and preprocessing
-- Algorithm selection and parameter optimization
-- Result visualization and analysis
-- Interpretation of results
-
-The examples demonstrate how to:
-- Handle different types of data (numerical, text, images)
-- Choose appropriate algorithms and parameters
-- Preprocess data effectively
-- Visualize and interpret results
-- Extract meaningful insights from clusters
+Each example demonstrates:
+- How to configure the noise detector
+- Different ways to analyze noise in your data
+- How to interpret the results
+- How to use the recommendations
 ```
 
 ## API Reference
 
-### Core Functions
+### NoiseDetector Class
 
-#### quick_cluster
 ```python
-def quick_cluster(
-    data: np.ndarray,
-    algorithm: str = "kmeans",
-    n_clusters: Optional[int] = None,
-    n_clusters_range: Optional[Tuple[int, int]] = None,
-    **kwargs
-) -> Tuple[BaseEstimator, Dict[str, float]]:
+class NoiseDetector:
     """
-    Quick clustering with automatic parameter selection.
+    Advanced noise detection for clustering data.
+    
+    Features:
+    - Multiple noise detection methods
+    - Noise type classification
+    - Local and global noise analysis
+    - Density-based noise detection
+    - Statistical outlier detection
+    - Ensemble noise detection
+    - Recommendations for noise handling
+    """
 
-    Parameters:
-        data: Input data matrix (n_samples, n_features)
-        algorithm: Clustering algorithm ('kmeans', 'dbscan', 'spectral')
-        n_clusters: Fixed number of clusters
-        n_clusters_range: Range of clusters to try (min, max)
-        **kwargs: Additional algorithm-specific parameters
+    def __init__(
+        self,
+        contamination: float = 0.1,
+        n_neighbors: int = 20,
+        random_state: int = 42,
+    ):
+        """
+        Initialize noise detector.
 
-    Returns:
-        model: Fitted clustering model
-        metrics: Dictionary of evaluation metrics
+        Parameters
+        ----------
+        contamination : float, default=0.1
+            Expected proportion of noise points
+        n_neighbors : int, default=20
+            Number of neighbors for local noise detection
+        random_state : int, default=42
+            Random state for reproducible results
+        """
+
+    def detect_noise(self, X: np.ndarray) -> NoiseProfile:
+        """
+        Detect and analyze noise in the data.
+
+        Parameters
+        ----------
+        X : np.ndarray
+            Input data of shape (n_samples, n_features)
+
+        Returns
+        -------
+        NoiseProfile
+            Detailed noise analysis results
+        """
+```
+
+### NoiseProfile Class
+
+```python
+@dataclass
+class NoiseProfile:
+    """
+    Profile of detected noise in the data.
+    
+    Attributes
+    ----------
+    noise_ratio : float
+        Ratio of noise points to total points
+    noise_indices : np.ndarray
+        Indices of noise points
+    noise_types : Dict[str, np.ndarray]
+        Different types of noise points
+    noise_scores : np.ndarray
+        Noise scores for each point
+    recommendations : Dict[str, Any]
+        Recommendations for handling noise
+    details : Dict[str, Any]
+        Detailed analysis results
     """
 ```
 
-#### optimize_clustering
-```python
-def optimize_clustering(
-    data: np.ndarray,
-    algorithm: str,
-    parameter_space: Dict[str, Any],
-    n_calls: int = 50,
-    random_state: Optional[int] = None,
-    optimization_metric: str = "silhouette",
-    n_jobs: int = -1
-) -> OptimizationResult:
-    """
-    Optimize clustering parameters using Bayesian optimization.
+### Detection Methods
 
-    Parameters:
-        data: Input data matrix
-        algorithm: Clustering algorithm name
-        parameter_space: Dictionary of parameters to optimize
-        n_calls: Number of optimization iterations
-        random_state: Random seed for reproducibility
-        optimization_metric: Metric to optimize
-        n_jobs: Number of parallel jobs
+The NoiseDetector class includes five different detection methods:
 
-    Returns:
-        OptimizationResult object containing:
-            - best_model: Best fitted model
-            - best_params: Best parameters found
-            - best_metrics: Metrics for best model
-            - optimization_history: Full optimization history
-    """
-```
+1. **Statistical Outlier Detection**
+   ```python
+   _detect_statistical_outliers(X: np.ndarray) -> Tuple[np.ndarray, np.ndarray, Dict[str, Any]]
+   ```
+   - Uses Z-scores and Mahalanobis distances
+   - Returns noise mask, scores, and statistical details
 
-#### analyze_clusters
-```python
-def analyze_clusters(
-    data: np.ndarray,
-    model: BaseEstimator,
-    stability_analysis: bool = True,
-    noise_analysis: bool = False,
-    n_iterations: int = 100,
-    random_state: Optional[int] = None
-) -> ClusterAnalysis:
-    """
-    Perform comprehensive cluster analysis.
+2. **Density-Based Detection**
+   ```python
+   _detect_density_based_noise(X: np.ndarray) -> Tuple[np.ndarray, np.ndarray, Dict[str, Any]]
+   ```
+   - Uses k-nearest neighbors density estimation
+   - Returns noise mask, scores, and density metrics
 
-    Parameters:
-        data: Input data matrix
-        model: Fitted clustering model
-        stability_analysis: Whether to perform stability analysis
-        noise_analysis: Whether to perform noise sensitivity analysis
-        n_iterations: Number of bootstrap iterations
-        random_state: Random seed for reproducibility
+3. **Isolation Forest Detection**
+   ```python
+   _detect_isolation_forest_noise(X: np.ndarray) -> Tuple[np.ndarray, np.ndarray, Dict[str, Any]]
+   ```
+   - Uses isolation forest algorithm
+   - Returns noise mask, scores, and forest details
 
-    Returns:
-        ClusterAnalysis object containing:
-            - stability_scores: Cluster stability metrics
-            - noise_sensitivity: Noise impact analysis
-            - cluster_profiles: Statistical profiles of clusters
-    """
-```
+4. **Local Outlier Detection**
+   ```python
+   _detect_local_outliers(X: np.ndarray) -> Tuple[np.ndarray, np.ndarray, Dict[str, Any]]
+   ```
+   - Uses Local Outlier Factor (LOF)
+   - Returns noise mask, scores, and LOF details
 
-### Preprocessing Functions
+5. **Covariance-Based Detection**
+   ```python
+   _detect_covariance_based_noise(X: np.ndarray) -> Tuple[np.ndarray, np.ndarray, Dict[str, Any]]
+   ```
+   - Uses robust covariance estimation
+   - Returns noise mask, scores, and covariance details
 
-#### preprocess_data
-```python
-def preprocess_data(
-    data: Union[np.ndarray, pd.DataFrame],
-    scale: bool = True,
-    handle_missing: str = 'mean',
-    categorical_encoding: str = 'onehot',
-    feature_selection: Optional[str] = None
-) -> np.ndarray:
-    """
-    Preprocess data for clustering.
+### Analysis Methods
 
-    Parameters:
-        data: Input data
-        scale: Whether to scale features
-        handle_missing: Strategy for missing values
-        categorical_encoding: Method for encoding categorical variables
-        feature_selection: Feature selection method
+1. **Noise Classification**
+   ```python
+   _classify_noise_types(
+       X: np.ndarray,
+       noise_scores: np.ndarray,
+       method_results: Dict[str, Any]
+   ) -> Dict[str, np.ndarray]
+   ```
+   - Classifies noise into different types
+   - Returns masks for each noise type
 
-    Returns:
-        Preprocessed data matrix
-    """
-```
-
-#### extract_timeseries_features
-```python
-def extract_timeseries_features(
-    data: Union[np.ndarray, pd.DataFrame],
-    features: List[str],
-    window_size: Optional[int] = None
-) -> np.ndarray:
-    """
-    Extract features from time series data.
-
-    Parameters:
-        data: Time series data
-        features: List of features to extract
-        window_size: Size of rolling window
-
-    Returns:
-        Feature matrix
-    """
-```
-
-### Visualization Functions
-
-#### plot_clusters
-```python
-def plot_clusters(
-    data: np.ndarray,
-    labels: np.ndarray,
-    features: Optional[List[str]] = None,
-    plot_type: str = 'scatter',
-    **kwargs
-) -> None:
-    """
-    Visualize clustering results.
-
-    Parameters:
-        data: Input data matrix
-        labels: Cluster labels
-        features: Feature names for axes
-        plot_type: Type of plot ('scatter', 'pca', 'tsne')
-        **kwargs: Additional plotting parameters
-    """
-```
-
-#### plot_optimization_history
-```python
-def plot_optimization_history(
-    results: OptimizationResult,
-    plot_type: str = 'convergence'
-) -> None:
-    """
-    Visualize optimization progress.
-
-    Parameters:
-        results: OptimizationResult object
-        plot_type: Type of plot ('convergence', 'parameter_importance')
-    """
-```
-
-### Algorithm Classes
-
-#### KMeans
-```python
-class KMeans(BaseClusteringAlgorithm):
-    """
-    Enhanced K-means clustering implementation.
-
-    Parameters:
-        n_clusters: Number of clusters
-        init: Initialization method
-        max_iter: Maximum iterations
-        n_init: Number of initializations
-        random_state: Random seed
-    """
-```
-
-#### DBSCAN
-```python
-class DBSCAN(BaseClusteringAlgorithm):
-    """
-    Enhanced DBSCAN clustering implementation.
-
-    Parameters:
-        eps: Maximum distance between points
-        min_samples: Minimum points in neighborhood
-        metric: Distance metric
-        n_jobs: Number of parallel jobs
-    """
-```
-
-#### SpectralClustering
-```python
-class SpectralClustering(BaseClusteringAlgorithm):
-    """
-    Enhanced spectral clustering implementation.
-
-    Parameters:
-        n_clusters: Number of clusters
-        affinity: Affinity type
-        n_neighbors: Number of neighbors
-        random_state: Random seed
-    """
-```
+2. **Recommendations Generation**
+   ```python
+   _generate_recommendations(
+       X: np.ndarray,
+       noise_ratio: float,
+       noise_types: Dict[str, np.ndarray],
+       method_results: Dict[str, Any]
+   ) -> Dict[str, Any]
+   ```
+   - Generates algorithm and preprocessing recommendations
+   - Returns detailed suggestions based on noise analysis
 
 ## Project Structure
 
